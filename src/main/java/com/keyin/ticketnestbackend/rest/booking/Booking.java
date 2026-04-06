@@ -29,6 +29,11 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Booking number (human-readable identifier) */
+    @NotNull(message = "Booking number is required")
+    @Column(nullable = false, unique = true)
+    private String bookingNumber;
+
     /** Number of tickets booked */
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be greater than 0")

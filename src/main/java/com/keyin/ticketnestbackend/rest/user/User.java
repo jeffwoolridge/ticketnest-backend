@@ -1,0 +1,58 @@
+package com.keyin.ticketnestbackend.rest.user;
+
+import com.keyin.ticketnestbackend.rest.booking.Booking;
+import com.keyin.ticketnestbackend.rest.model.Role;
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents a user in the system.
+ * A user can create multiple bookings for events.
+ */
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User {
+
+    /** Unique identifier for the user */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /** User's first name */
+    @Column(nullable = false)
+    private String firstName;
+
+    /** User's last name */
+    @Column(nullable = false)
+    private String lastName;
+
+    /** Unique email address used for authentication */
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    /** Encrypted password */
+    @Column(nullable = false)
+    private String password;
+
+    /** Role assigned to the user (USER or ADMIN) */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    /**
+     * One user can have many bookings.
+     * This is the inverse side of the relationship.
+     */
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Booking> bookings = new ArrayList<>();
+}

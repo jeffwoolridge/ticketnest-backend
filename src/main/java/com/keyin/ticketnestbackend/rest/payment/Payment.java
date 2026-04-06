@@ -1,0 +1,43 @@
+package com.keyin.ticketnestbackend.rest.payment;
+
+import com.keyin.ticketnestbackend.rest.booking.Booking;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * Represents a payment made for a booking.
+ * A booking is only considered successful after a successful payment.
+ */
+@Entity
+@Table(name = "payments")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Payment {
+
+    /** Unique identifier for the payment */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /** Amount paid by the user */
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amountPaid;
+
+    /** Date and time the payment was made */
+    @Column(nullable = false)
+    private LocalDateTime paymentDate;
+
+    /**
+     * Each payment is linked to one booking.
+     * This is the owning side of the one-to-one relationship.
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false, unique = true)
+    private Booking booking;
+}

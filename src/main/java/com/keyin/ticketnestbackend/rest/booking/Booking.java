@@ -4,6 +4,8 @@ import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.payment.Payment;
 import com.keyin.ticketnestbackend.rest.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -28,20 +30,26 @@ public class Booking {
     private Long id;
 
     /** Number of tickets booked */
+    @NotNull(message = "Quantity is required")
+    @Positive(message = "Quantity must be greater than 0")
     @Column(nullable = false)
     private Integer quantity;
 
     /** Date and time the booking was created */
+    @NotNull(message = "Booking date is required")
     @Column(nullable = false)
     private LocalDateTime bookingDate;
 
     /** Total price calculated based on quantity and event price */
+    @NotNull(message = "Total price is required")
+    @Positive(message = "Total price must be greater than 0")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
     /**
      * Many bookings belong to one user.
      */
+    @NotNull(message = "User is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -49,6 +57,7 @@ public class Booking {
     /**
      * Many bookings belong to one event.
      */
+    @NotNull(message = "Event is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;

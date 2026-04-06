@@ -7,15 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface EventRepository extends JpaRepository<Event, Long> {
     /**
-     * Finds an event by its name.
+     * Finds an event by its title.
      *
-     * @param name the name of the event to search for
-     * @return the Event with the specified name, or null if not found
+     * @param title the title of the event to search for
+     * @return the Event with the specified title, or null if not found
      */
-    Event findByName(String name);
+    Event findByTitle(String title);
 
     /**
-     * Checks if an event exists with the given name.
+     * Checks if an event exists with the given title.
      *
      * @param title the title of the event to check for existence
      * @return true if an event with the specified title exists, false otherwise

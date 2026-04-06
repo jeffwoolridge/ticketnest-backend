@@ -22,13 +22,6 @@ public class BookingService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-    /**
-     * Constructs a BookingService with required repositories.
-     *
-     * @param bookingRepository repository used for booking persistence
-     * @param userRepository repository used for user lookups
-     * @param eventRepository repository used for event lookups
-     */
     public BookingService(
             BookingRepository bookingRepository,
             UserRepository userRepository,
@@ -39,18 +32,6 @@ public class BookingService {
         this.eventRepository = eventRepository;
     }
 
-    /**
-     * Creates a booking for a user and event.
-     * Validates ticket availability and calculates total price.
-     *
-     * @param userId the ID of the user making the booking
-     * @param eventId the ID of the event being booked
-     * @param quantity the number of tickets requested
-     * @return the created booking
-     * @throws IllegalArgumentException if user or event is not found,
-     *                                  if quantity is invalid,
-     *                                  or if available tickets are insufficient
-     */
     @Transactional
     public Booking createBooking(Long userId, Long eventId, Integer quantity) {
         if (quantity == null || quantity <= 0) {
@@ -74,69 +55,34 @@ public class BookingService {
         booking.setBookingDate(LocalDateTime.now());
         booking.setTotalPrice(totalPrice);
 
+        String bookingNumber = "BKG-" + System.currentTimeMillis();
+        booking.setBookingNumber(bookingNumber);
+
         return bookingRepository.save(booking);
     }
 
-    /**
-     * Retrieves a booking by ID.
-     *
-     * @param id the booking ID
-     * @return the found booking
-     * @throws IllegalArgumentException if booking is not found
-     */
     public Booking getBookingById(Long id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found."));
     }
 
-    /**
-     * Retrieves all bookings.
-     *
-     * @return list of all bookings
-     */
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
 
-    /**
-     * Retrieves all bookings for a given user.
-     *
-     * @param userId the user ID
-     * @return list of user's bookings
-     */
     public List<Booking> getBookingsByUserId(Long userId) {
         return bookingRepository.findByUserId(userId);
     }
 
-    /**
-     * Deletes a booking by ID.
-     *
-     * @param id the booking ID
-     * @throws IllegalArgumentException if booking is not found
-     */
     public void deleteBooking(Long id) {
         Booking booking = getBookingById(id);
         bookingRepository.delete(booking);
     }
 
-    /**
-     * Calculates the total price for a booking.
-     *
-     * @param ticketPrice the price of one ticket
-     * @param quantity the number of tickets
-     * @return the total booking price
-     */
     public BigDecimal calculateTotalPrice(BigDecimal ticketPrice, Integer quantity) {
         return ticketPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
-    /**
-     * Validates that an event has enough tickets available.
-     *
-     * @param event the event being checked
-     * @param quantity the requested number of tickets
-     * @throws IllegalArgumentException if available tickets are insufficient
-     */
     public void validateAvailableTickets(Event event, Integer quantity) {
         if (event.getAvailableTickets() < quantity) {
             throw new IllegalArgumentException("Not enough tickets available for this event.");

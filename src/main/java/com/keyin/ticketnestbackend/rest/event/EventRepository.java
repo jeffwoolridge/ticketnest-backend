@@ -1,12 +1,11 @@
 package com.keyin.ticketnestbackend.rest.event;
 
-import com.keyin.ticketnestbackend.rest.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Repository interface for managing Event entities.
  */
-public interface EventRepository extends JpaRepository<User, Long> {
+public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * Finds an event by its name.
      *

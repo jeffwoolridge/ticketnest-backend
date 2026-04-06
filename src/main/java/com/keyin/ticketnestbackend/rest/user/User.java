@@ -4,6 +4,9 @@ import com.keyin.ticketnestbackend.rest.booking.Booking;
 import com.keyin.ticketnestbackend.rest.model.Role;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -22,30 +25,44 @@ import java.util.List;
 @Builder
 public class User {
 
-    /** Unique identifier for the user */
+    /**
+     * Unique identifier for the user
+     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** User's first name */
+    /**
+     * User's first name
+     */
+    @NotBlank(message = "First name is required")
     @Column(nullable = false)
     private String firstName;
 
-    /** User's last name */
+    /**
+     * User's last name
+     */
+    @NotBlank(message = "Last name is required")
     @Column(nullable = false)
     private String lastName;
 
-    /** Unique email address used for authentication */
+    /**
+     * Unique email address used for authentication
+     */
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
     /** Encrypted password */
+    @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
 
     /** Role assigned to the user (USER or ADMIN) */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull(message = "Role is required")
     private Role role;
 
     /**

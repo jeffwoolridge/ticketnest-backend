@@ -2,6 +2,7 @@ package com.keyin.ticketnestbackend.rest.booking;
 
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.event.EventRepository;
+import com.keyin.ticketnestbackend.rest.payment.PaymentRepository;
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,10 @@ class BookingServiceTest {
     private final BookingRepository bookingRepository = mock(BookingRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final EventRepository eventRepository = mock(EventRepository.class);
+    private final PaymentRepository paymentRepository = mock(PaymentRepository.class);
 
     private final BookingService bookingService =
-            new BookingService(bookingRepository, userRepository, eventRepository);
+            new BookingService(bookingRepository, userRepository, eventRepository, paymentRepository);
 
     @Test
     void createBooking_success() {

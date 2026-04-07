@@ -1,4 +1,4 @@
-package com.keyin.ticketnestbackend.controller;
+package com.keyin.ticketnestbackend.rest.auth;
 
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
@@ -32,7 +32,6 @@ public class AuthController {
     }
 
     record RegisterRequest(String email, String password, String firstName, String lastName) {}
-    record LoginRequest(String email, String password) {}
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
@@ -51,7 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.email(), req.password())
         );

@@ -4,6 +4,7 @@ import com.keyin.ticketnestbackend.rest.booking.Booking;
 import com.keyin.ticketnestbackend.rest.booking.BookingRepository;
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.event.EventRepository;
+import com.keyin.ticketnestbackend.rest.model.PaymentStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -60,20 +61,22 @@ public class PaymentService {
             throw new IllegalArgumentException("Payment already exists for this booking.");
         }
 
-        validatePaymentAmount(booking.getTotalPrice(), amountPaid);
-
-        Event event = booking.getEvent();
-
-        // Reduce available tickets only after successful payment
-        event.setAvailableTickets(event.getAvailableTickets() - booking.getQuantity());
-        eventRepository.save(event);
-
         Payment payment = new Payment();
         payment.setBooking(booking);
         payment.setAmountPaid(amountPaid);
         payment.setPaymentDate(LocalDateTime.now());
 
-        return paymentRepository.save(payment);
+        if (amountPaid != null && amountPaid.compareTo(booking.getTotalPrice()) == 0) {
+            Event event = booking.getEvent();
+            event.setAvailableTickets(event.getAvailableTickets() - booking.getQuantity());
+            eventRepository.save(event);
+            payment.setStatus(PaymentStatus.SUCCESS);
+            return paymentRepository.save(payment);
+        } else {
+            payment.setStatus(PaymentStatus.FAIL);
+            bookingRepository.delete(booking);
+            return paymentRepository.save(payment);
+        }
     }
 
     /**

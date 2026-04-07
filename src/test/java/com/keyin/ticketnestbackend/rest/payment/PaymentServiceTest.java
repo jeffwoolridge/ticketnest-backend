@@ -4,13 +4,13 @@ import com.keyin.ticketnestbackend.rest.booking.Booking;
 import com.keyin.ticketnestbackend.rest.booking.BookingRepository;
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.event.EventRepository;
+import com.keyin.ticketnestbackend.rest.model.PaymentStatus;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -43,19 +43,22 @@ class PaymentServiceTest {
         Payment payment = paymentService.createPayment(1L, BigDecimal.TEN);
 
         assertThat(payment.getAmountPaid()).isEqualTo(BigDecimal.TEN);
+        assertThat(payment.getStatus()).isEqualTo(PaymentStatus.SUCCESS);
         assertThat(event.getAvailableTickets()).isEqualTo(8); // 10 - quantity(2)
     }
 
     @Test
-    void createPayment_throwsIfAmountMismatch() {
+    void createPayment_failsIfAmountMismatch() {
         Booking booking = new Booking();
         booking.setId(1L);
         booking.setTotalPrice(BigDecimal.TEN);
 
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
         when(paymentRepository.findByBookingId(1L)).thenReturn(Optional.empty());
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        assertThrows(IllegalArgumentException.class,
-                () -> paymentService.createPayment(1L, BigDecimal.ONE));
+        Payment payment = paymentService.createPayment(1L, BigDecimal.ONE);
+
+        assertThat(payment.getStatus()).isEqualTo(PaymentStatus.FAIL);
     }
 }

@@ -2,6 +2,7 @@ package com.keyin.ticketnestbackend.rest.booking;
 
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.event.EventRepository;
+import com.keyin.ticketnestbackend.rest.payment.PaymentRepository;
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,15 +22,18 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final PaymentRepository paymentRepository;
 
     public BookingService(
             BookingRepository bookingRepository,
             UserRepository userRepository,
-            EventRepository eventRepository
+            EventRepository eventRepository,
+            PaymentRepository paymentRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @Transactional
@@ -74,8 +78,18 @@ public class BookingService {
         return bookingRepository.findByUserId(userId);
     }
 
+    @Transactional
     public void deleteBooking(Long id) {
         Booking booking = getBookingById(id);
+        
+        boolean hasPayment = paymentRepository.findByBookingId(id).isPresent();
+        
+        if (!hasPayment) {
+            Event event = booking.getEvent();
+            event.setAvailableTickets(event.getAvailableTickets() + booking.getQuantity());
+            eventRepository.save(event);
+        }
+        
         bookingRepository.delete(booking);
     }
 

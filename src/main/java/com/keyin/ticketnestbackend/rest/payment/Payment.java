@@ -1,6 +1,7 @@
 package com.keyin.ticketnestbackend.rest.payment;
 
 import com.keyin.ticketnestbackend.rest.booking.Booking;
+import com.keyin.ticketnestbackend.rest.model.PaymentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -32,6 +33,11 @@ public class Payment {
     @Positive(message = "Amount paid must be greater than 0")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amountPaid;
+
+    /** Status of the payment (SUCCESS or FAIL) */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus status;
 
     /** Date and time the payment was made */
     @NotNull(message = "Payment date is required")

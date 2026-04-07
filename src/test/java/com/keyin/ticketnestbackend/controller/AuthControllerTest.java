@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.controller;
 
+import com.keyin.ticketnestbackend.rest.auth.AuthController;
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import com.keyin.ticketnestbackend.security.AppUserDetails;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
+@WebMvcTest(com.keyin.ticketnestbackend.rest.auth.AuthController.class)
 @Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)
 public class AuthControllerTest {
 

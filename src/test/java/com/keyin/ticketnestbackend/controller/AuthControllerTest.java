@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
-@Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)  // ADD THIS
+@Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)
 public class AuthControllerTest {
 
     @Autowired
@@ -47,14 +47,14 @@ public class AuthControllerTest {
     @MockBean
     private JwtUtil jwtUtil;
 
-    @MockBean  // ADD THIS
+    @MockBean
     private com.keyin.ticketnestbackend.security.CustomUserDetailsService customUserDetailsService;
 
     @Test
     @DisplayName("POST /auth/register should create user when email not taken")
     void registerCreatesUser() throws Exception {
         when(userRepository.existsByEmail(eq("bob@example.com"))).thenReturn(false);
-        // mimic saving - return user with id
+
         User saved = User.builder()
                 .id(2L)
                 .email("bob@example.com")
@@ -77,7 +77,6 @@ public class AuthControllerTest {
     @Test
     @DisplayName("POST /auth/login should return token and user")
     void loginReturnsTokenAndUser() throws Exception {
-        // prepare user returned by authentication principal
         User user = User.builder()
                 .id(3L)
                 .email("carol@example.com")

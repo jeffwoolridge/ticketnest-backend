@@ -74,25 +74,39 @@ class EventControllerTest {
                 .build();
         regularUser = userRepository.save(regularUser);
 
-        userToken = jwtUtil.generateToken("user@test.com");
+        User adminUser = User.builder()
+                .email("admin@test.com")
+                .password(passwordEncoder.encode("admin123"))
+                .firstName("Admin")
+                .lastName("User")
+                .role(Role.ADMIN)
+                .build();
+        userRepository.save(adminUser);
+
+        userToken = jwtUtil.generateToken("admin@test.com");
 
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    private Event createEvent(String title) {
+        return Event.builder()
+                .title(title)
+                .description("Test description")
+                .price(new BigDecimal("50.00"))
+                .date(LocalDate.of(2026, 12, 31))
+                .time(LocalTime.of(20, 0))
+                .totalTickets(100)
+                .availableTickets(100)
+                .Location("Test Location")
+                .build();
+    }
+
     @Test
     @DisplayName("POST /api/events - should create event with valid data")
     void createEvent_Success() throws Exception {
-        Event event = Event.builder()
-                .title("Test Concert")
-                .description("A great concert")
-                .price(new BigDecimal("100.00"))
-                .date(LocalDate.of(2026, 12, 31))
-                .time(LocalTime.of(20, 0))
-                .totalTickets(500)
-                .availableTickets(500)
-                .build();
+        Event event = createEvent("Test Concert");
 
         mockMvc.perform(post("/api/events")
                         .header("Authorization", "Bearer " + userToken)
@@ -101,22 +115,14 @@ class EventControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").value("Test Concert"))
-                .andExpect(jsonPath("$.price").value(100.00))
-                .andExpect(jsonPath("$.totalTickets").value(500));
+                .andExpect(jsonPath("$.price").value(50.00))
+                .andExpect(jsonPath("$.totalTickets").value(100));
     }
 
     @Test
     @DisplayName("GET /api/events - should return all events")
     void getAllEvents_Success() throws Exception {
-        Event event = Event.builder()
-                .title("Concert 1")
-                .description("Test 1")
-                .price(new BigDecimal("50.00"))
-                .date(LocalDate.of(2026, 12, 31))
-                .time(LocalTime.of(20, 0))
-                .totalTickets(100)
-                .availableTickets(100)
-                .build();
+        Event event = createEvent("Concert 1");
         eventRepository.save(event);
 
         mockMvc.perform(get("/api/events")
@@ -129,15 +135,7 @@ class EventControllerTest {
     @Test
     @DisplayName("GET /api/events/{id} - should return event by id")
     void getEventById_Success() throws Exception {
-        Event event = Event.builder()
-                .title("Test Concert")
-                .description("Test")
-                .price(new BigDecimal("50.00"))
-                .date(LocalDate.of(2026, 12, 31))
-                .time(LocalTime.of(20, 0))
-                .totalTickets(100)
-                .availableTickets(100)
-                .build();
+        Event event = createEvent("Test Concert");
         event = eventRepository.save(event);
 
         mockMvc.perform(get("/api/events/" + event.getId())
@@ -150,15 +148,7 @@ class EventControllerTest {
     @Test
     @DisplayName("PUT /api/events/{id} - should update event")
     void updateEvent_Success() throws Exception {
-        Event event = Event.builder()
-                .title("Original Name")
-                .description("Original Description")
-                .price(new BigDecimal("50.00"))
-                .date(LocalDate.of(2026, 12, 31))
-                .time(LocalTime.of(20, 0))
-                .totalTickets(100)
-                .availableTickets(100)
-                .build();
+        Event event = createEvent("Original Name");
         event = eventRepository.save(event);
 
         Event updated = Event.builder()
@@ -169,6 +159,7 @@ class EventControllerTest {
                 .time(LocalTime.of(19, 0))
                 .totalTickets(150)
                 .availableTickets(150)
+                .Location("Updated Location")
                 .build();
 
         mockMvc.perform(put("/api/events/" + event.getId())
@@ -184,15 +175,7 @@ class EventControllerTest {
     @Test
     @DisplayName("DELETE /api/events/{id} - should delete event")
     void deleteEvent_Success() throws Exception {
-        Event event = Event.builder()
-                .title("Test Concert")
-                .description("Test")
-                .price(new BigDecimal("50.00"))
-                .date(LocalDate.of(2026, 12, 31))
-                .time(LocalTime.of(20, 0))
-                .totalTickets(100)
-                .availableTickets(100)
-                .build();
+        Event event = createEvent("Test Concert");
         event = eventRepository.save(event);
 
         mockMvc.perform(delete("/api/events/" + event.getId())

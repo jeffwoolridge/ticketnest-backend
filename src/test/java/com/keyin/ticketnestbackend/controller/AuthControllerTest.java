@@ -69,7 +69,7 @@ public class AuthControllerTest {
 
         mockMvc.perform(post("/api/auth/register").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\":\"bob@example.com\",\"password\":\"secret\",\"firstName\":\"Bob\",\"lastName\":\"B\"}"))
+                .content("{\"email\":\"bob@example.com\",\"password\":\"secretpassword\",\"firstName\":\"Bob\",\"lastName\":\"B\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("ok"))
                 .andExpect(jsonPath("$.id").value(2));

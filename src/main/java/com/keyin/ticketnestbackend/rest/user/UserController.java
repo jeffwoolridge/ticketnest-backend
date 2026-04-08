@@ -18,11 +18,11 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @PostMapping
-//    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-//        User created = userService.createUser(user);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-//    }
+    @PostMapping
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        User created = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {

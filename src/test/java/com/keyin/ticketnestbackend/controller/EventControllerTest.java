@@ -9,6 +9,7 @@ import com.keyin.ticketnestbackend.rest.model.Role;
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import com.keyin.ticketnestbackend.security.JwtUtil;
+import com.keyin.ticketnestbackend.security.CustomUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,22 +50,29 @@ class EventControllerTest {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     private ObjectMapper objectMapper;
     private String userToken;
+    private User regularUser;
 
     @BeforeEach
     void setUp() {
         eventRepository.deleteAll();
         userRepository.deleteAll();
 
-        User regularUser = User.builder()
+        regularUser = User.builder()
                 .email("user@test.com")
                 .password(passwordEncoder.encode("user123"))
                 .firstName("Regular")
                 .lastName("User")
                 .role(Role.USER)
                 .build();
-        userRepository.save(regularUser);
+        regularUser = userRepository.save(regularUser);
 
         userToken = jwtUtil.generateToken("user@test.com");
 
@@ -168,7 +177,8 @@ class EventControllerTest {
                         .content(objectMapper.writeValueAsString(updated)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Updated Name"))
-                .andExpect(jsonPath("$.price").value(75.00));
+                .andExpect(jsonPath("$.price").value(75.00))
+                .andExpect(jsonPath("$.totalTickets").value(150));
     }
 
     @Test

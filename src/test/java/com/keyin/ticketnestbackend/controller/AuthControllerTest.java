@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.controller;
 
+import com.keyin.ticketnestbackend.rest.auth.AuthController;
 import com.keyin.ticketnestbackend.rest.user.User;
 import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import com.keyin.ticketnestbackend.security.AppUserDetails;
@@ -28,8 +29,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
-@Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)  // ADD THIS
+@WebMvcTest(com.keyin.ticketnestbackend.rest.auth.AuthController.class)
+@Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)
 public class AuthControllerTest {
 
     @Autowired
@@ -47,14 +48,14 @@ public class AuthControllerTest {
     @MockBean
     private JwtUtil jwtUtil;
 
-    @MockBean  // ADD THIS
+    @MockBean
     private com.keyin.ticketnestbackend.security.CustomUserDetailsService customUserDetailsService;
 
     @Test
-    @DisplayName("POST /auth/register should create user when email not taken")
+    @DisplayName("POST /api/auth/register should create user when email not taken")
     void registerCreatesUser() throws Exception {
         when(userRepository.existsByEmail(eq("bob@example.com"))).thenReturn(false);
-        // mimic saving - return user with id
+
         User saved = User.builder()
                 .id(2L)
                 .email("bob@example.com")
@@ -66,7 +67,7 @@ public class AuthControllerTest {
         when(userRepository.save(any(User.class))).thenReturn(saved);
         when(passwordEncoder.encode(eq("secret"))).thenReturn("encoded");
 
-        mockMvc.perform(post("/auth/register").with(csrf())
+        mockMvc.perform(post("/api/auth/register").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"email\":\"bob@example.com\",\"password\":\"secret\",\"firstName\":\"Bob\",\"lastName\":\"B\"}"))
                 .andExpect(status().isOk())
@@ -75,9 +76,8 @@ public class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("POST /auth/login should return token and user")
+    @DisplayName("POST /api/auth/login should return token and user")
     void loginReturnsTokenAndUser() throws Exception {
-        // prepare user returned by authentication principal
         User user = User.builder()
                 .id(3L)
                 .email("carol@example.com")
@@ -92,7 +92,7 @@ public class AuthControllerTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
         when(jwtUtil.generateToken(eq("carol@example.com"))).thenReturn("dummy-token");
 
-        mockMvc.perform(post("/auth/login").with(csrf())
+        mockMvc.perform(post("/api/auth/login").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"email\":\"carol@example.com\",\"password\":\"pw\"}"))
                 .andExpect(status().isOk())

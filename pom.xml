@@ -22,7 +22,7 @@
         <java.version>21</java.version>
         <spring.boot.version>3.1.5</spring.boot.version>
         <mysql.version>8.1.0</mysql.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.44</lombok.version>
     </properties>
 
     <dependencies>
@@ -110,6 +110,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <!-- Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
         </dependency>
     </dependencies>
 

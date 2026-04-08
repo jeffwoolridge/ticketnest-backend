@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
         Event savedEvent = eventService.createEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);
@@ -30,16 +32,19 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<?> getAllEvents() {
+        System.out.println("EventController.getAllEvents()");
         return ResponseEntity.ok(eventService.getAllEvents());
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Event> updateEvent(@PathVariable Long id,
                                              @Valid @RequestBody Event eventDetails) {
         return ResponseEntity.ok(eventService.updateEvent(id, eventDetails));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();

@@ -71,6 +71,10 @@ public class Event {
     @Column(nullable = false)
     private Integer availableTickets;
 
+    @NotNull(message = "Location is required")
+    @Column(nullable = false)
+    private String Location;
+
     /**
      * One event can have many bookings.
      * Each booking is linked to a specific event.

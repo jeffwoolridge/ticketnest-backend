@@ -24,7 +24,6 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 public class JwtSecurityConfig {
-
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService uds;
 
@@ -33,21 +32,36 @@ public class JwtSecurityConfig {
         this.uds = uds;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, uds);
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, uds);
 
-        http
+    http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/actuator/health").permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers(
+                            "/error",
+                            "/favicon.ico",
+                            "/actuator/health",
+                            "/v3/api-docs",
+                            "/api/auth/**",
+                            "/api/auth",
+                            "/api/bookings/**",
+                            "/api/bookings",
+                            "/api/events/**",
+                            "/api/events",
+                            "/api/payments/**",
+                            "/api/payments",
+                            "/api/users/**",
+                            "/api/users"
+                    ).permitAll()
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+}
 
     @Bean
     public PasswordEncoder passwordEncoder() {

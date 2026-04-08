@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.rest.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.keyin.ticketnestbackend.rest.booking.Booking;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,7 @@ import java.util.List;
  * Represents an event that users can book tickets for.
  * Each event has a limited number of available tickets.
  */
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "events")
 @Getter

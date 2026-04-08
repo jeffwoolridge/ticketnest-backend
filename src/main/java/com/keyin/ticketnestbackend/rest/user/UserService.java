@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.rest.user;
 
+import com.keyin.ticketnestbackend.rest.model.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class UserService {
      * @throws IllegalArgumentException if email already exists
      */
     public User createUser(User user) {
+        user.setRole(Role.USER);
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("A user with this email already exists.");
         }

@@ -31,12 +31,10 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    record RegisterRequest(String email, String password, String firstName, String lastName) {}
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
         if (userRepository.existsByEmail(req.email())) {
-            return ResponseEntity.badRequest().body(Map.of("error","email_taken"));
+            return ResponseEntity.badRequest().body(Map.of("error","Email exists."));
         }
         User u = User.builder()
                 .email(req.email())

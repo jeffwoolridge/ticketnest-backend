@@ -1,12 +1,16 @@
 package com.keyin.ticketnestbackend.security;
 
+import com.keyin.ticketnestbackend.rest.model.Role;
 import com.keyin.ticketnestbackend.rest.user.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class AppUserDetails implements UserDetails {
     private final User user;
 
@@ -14,7 +18,7 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_" + user.getRole().name());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
@@ -35,6 +39,5 @@ public class AppUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() { return true; }
 
-    public User getUser() { return user; }
 }
 

@@ -62,7 +62,6 @@ public class User {
     /** Role assigned to the user (USER or ADMIN) */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull(message = "Role is required")
     private Role role;
 
     /**

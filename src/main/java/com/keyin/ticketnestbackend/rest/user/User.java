@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.rest.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.keyin.ticketnestbackend.rest.booking.Booking;
 import com.keyin.ticketnestbackend.rest.model.Role;
 import jakarta.persistence.*;
@@ -16,6 +17,7 @@ import java.util.List;
  * Represents a user in the system.
  * A user can create multiple bookings for events.
  */
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "users")
 @Getter

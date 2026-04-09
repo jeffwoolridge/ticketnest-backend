@@ -5,8 +5,10 @@ import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import com.keyin.ticketnestbackend.security.JwtUtil;
 import com.keyin.ticketnestbackend.security.AppUserDetails;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,22 +50,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.password())
-        );
-        AppUserDetails ud = (AppUserDetails) auth.getPrincipal();
-        String token = jwtUtil.generateToken(ud.getUsername());
-        Map<String,Object> resp = Map.of(
-                "token", token,
-                "user", Map.of(
-                        "id", ud.getUser().getId(),
-                        "firstName", ud.getUser().getFirstName(),
-                        "lastName", ud.getUser().getLastName(),
-                        "email", ud.getUser().getEmail(),
-                        "role", ud.getUser().getRole().name()
-                )
-        );
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest req) {
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(req.email(), req.password())
+            );
+
+            AppUserDetails ud = (AppUserDetails) auth.getPrincipal();
+            String token = jwtUtil.generateToken(ud.getUsername());
+
+            Map<String,Object> resp = Map.of(
+                    "token", token,
+                    "user", Map.of(
+                            "id", ud.getUser().getId(),
+                            "firstName", ud.getUser().getFirstName(),
+                            "lastName", ud.getUser().getLastName(),
+                            "email", ud.getUser().getEmail(),
+                            "role", ud.getUser().getRole().name()
+                    )
+            );
+
+            return ResponseEntity.ok(resp);
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid email or password"));
+        }
     }
 }

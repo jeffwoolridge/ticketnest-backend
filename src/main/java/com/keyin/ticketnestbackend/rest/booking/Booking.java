@@ -1,5 +1,6 @@
 package com.keyin.ticketnestbackend.rest.booking;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.payment.Payment;
 import com.keyin.ticketnestbackend.rest.user.User;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * Represents a booking made by a user for a specific event.
  * A booking contains the number of tickets and total price.
  */
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "bookings")
 @Getter
@@ -54,6 +56,7 @@ public class Booking {
     /**
      * Many bookings belong to one user.
      */
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @NotNull(message = "User is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

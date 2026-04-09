@@ -2,6 +2,9 @@ package com.keyin.ticketnestbackend.rest.event;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /**
  * Repository interface for managing Event entities.
  */
@@ -21,4 +24,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return true if an event with the specified title exists, false otherwise
      */
     boolean existsByTitle(String title);
+
+    boolean existsByTitleAndDateAndTime(String title, LocalDate date, LocalTime time);
 }

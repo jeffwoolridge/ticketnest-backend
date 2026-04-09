@@ -99,7 +99,7 @@ class EventControllerTest {
                 .time(LocalTime.of(20, 0))
                 .totalTickets(100)
                 .availableTickets(100)
-                .Location("Test Location")
+                .location("Test Location")
                 .build();
     }
 
@@ -159,7 +159,7 @@ class EventControllerTest {
                 .time(LocalTime.of(19, 0))
                 .totalTickets(150)
                 .availableTickets(150)
-                .Location("Updated Location")
+                .location("Updated Location")
                 .build();
 
         mockMvc.perform(put("/api/events/" + event.getId())

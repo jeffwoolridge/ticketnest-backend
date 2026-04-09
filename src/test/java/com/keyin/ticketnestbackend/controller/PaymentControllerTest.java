@@ -93,7 +93,7 @@ class PaymentControllerTest {
                 .time(LocalTime.of(20, 0))
                 .totalTickets(500)
                 .availableTickets(500)
-                .Location("Test Location")
+                .location("Test Location")
                 .build();
         testEvent = eventRepository.save(testEvent);
 

@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "CI" ]
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "dev", "CI" ]
 
 jobs:
   build:
@@ -30,4 +30,11 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B clean verify --file pom.xml
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/index.html
+          retention-days: 30

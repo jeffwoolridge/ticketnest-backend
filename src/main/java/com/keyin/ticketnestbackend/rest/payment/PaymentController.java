@@ -29,8 +29,23 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(payment);
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<PaymentResponse> getPayment(@PathVariable Long id) {
+//        return ResponseEntity.ok(paymentService.getPaymentById(id));
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+//        return ResponseEntity.ok(paymentService.getPaymentById(id));
+//    }
+
+    @GetMapping("/{id}/customerName")
+    public ResponseEntity<PaymentResponse> getPayment(@PathVariable Long id) {
+        return ResponseEntity.ok(paymentService.getPaymentsById(id));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+    public ResponseEntity<Payment> getPaymentRaw(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 

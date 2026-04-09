@@ -26,4 +26,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     boolean existsByTitle(String title);
 
     boolean existsByTitleAndDateAndTime(String title, LocalDate date, LocalTime time);
+
+    boolean existsByTitleAndDateAndTimeAndLocation(
+            String title,
+            LocalDate date,
+            LocalTime time,
+            String location
+    );
 }

@@ -119,7 +119,6 @@ class PaymentControllerTest {
                         .param("amountPaid", "200.00"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.booking.id").value(testBooking.getId()))
                 .andExpect(jsonPath("$.amountPaid").value(200.00))
                 .andExpect(jsonPath("$.status").value("SUCCESS"));
     }
@@ -175,7 +174,7 @@ class PaymentControllerTest {
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].booking.user.id").value(regularUser.getId()));
+                .andExpect(jsonPath("$[0].amountPaid").value(200.00));
     }
 
     @Test

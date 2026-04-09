@@ -45,6 +45,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                             "/favicon.ico",
                             "/actuator/health",
                             "/v3/api-docs",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/api-docs",
                             "/api/auth/**",
                             "/api/auth",
                             "/api/bookings/**",
@@ -79,7 +82,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

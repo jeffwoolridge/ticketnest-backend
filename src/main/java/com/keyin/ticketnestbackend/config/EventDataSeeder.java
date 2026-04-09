@@ -33,7 +33,7 @@ public class EventDataSeeder implements CommandLineRunner {
                         .price(new BigDecimal("49.99"))
                         .totalTickets(200)
                         .availableTickets(200)
-                        .location("St. John's Convention Centre")
+                        .Location("St. John's Convention Centre")
                         .build(),
 
                 Event.builder()
@@ -44,7 +44,7 @@ public class EventDataSeeder implements CommandLineRunner {
                         .price(new BigDecimal("35.00"))
                         .totalTickets(150)
                         .availableTickets(150)
-                        .location("Downtown Arena")
+                        .Location("Downtown Arena")
                         .build(),
 
                 Event.builder()
@@ -55,7 +55,7 @@ public class EventDataSeeder implements CommandLineRunner {
                         .price(new BigDecimal("15.00"))
                         .totalTickets(100)
                         .availableTickets(100)
-                        .location("Innovation Hub")
+                        .Location("Innovation Hub")
                         .build()
         );
 

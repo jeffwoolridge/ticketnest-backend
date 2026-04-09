@@ -91,13 +91,26 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found."));
     }
 
+    public PaymentResponse getPaymentsById(Long id) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        return toResponse(payment);
+    }
+
     /**
      * Retrieves all payments.
      *
      * @return list of all payments
      */
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+//    public List<Payment> getAllPayments() {
+//        return paymentRepository.findAll();
+//    }
+    public List<PaymentResponse> getAllPayments() {
+        return paymentRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     /**
@@ -132,5 +145,19 @@ public class PaymentService {
         if (amountPaid == null || amountPaid.compareTo(totalPrice) != 0) {
             throw new IllegalArgumentException("Payment amount must exactly match the booking total price.");
         }
+    }
+
+    private PaymentResponse toResponse(Payment payment) {
+        return new PaymentResponse(
+                payment.getId(),
+                payment.getAmountPaid(),
+                payment.getStatus(),
+                payment.getPaymentDate(),
+                payment.getBooking().getId(),
+                payment.getBooking().getBookingNumber(),
+                payment.getBooking().getUser().getId(),
+                payment.getBooking().getUser().getFirstName() + " " +
+                        payment.getBooking().getUser().getLastName()
+        );
     }
 }

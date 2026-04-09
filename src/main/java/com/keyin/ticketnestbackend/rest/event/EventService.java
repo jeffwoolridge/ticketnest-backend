@@ -29,6 +29,17 @@ public class EventService {
      * @return the saved event
      */
     public Event createEvent(Event event) {
+        boolean exists = eventRepository.existsByTitleAndDateAndTimeAndLocation(
+                event.getTitle(),
+                event.getDate(),
+                event.getTime(),
+                event.getLocation()
+        );
+
+        if (exists) {
+            throw new IllegalArgumentException("An event with the same title, date, time, and location already exists.");
+        }
+
         event.setAvailableTickets(event.getTotalTickets());
         return eventRepository.save(event);
     }

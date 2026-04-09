@@ -22,7 +22,15 @@ import java.util.List;
  */
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "events")
+@Table(
+        name = "events",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_event_title_date_time_location",
+                        columnNames = {"title", "date", "time", "location"}
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -75,7 +83,7 @@ public class Event {
 
     @NotNull(message = "Location is required")
     @Column(nullable = false)
-    private String Location;
+    private String location;
 
     /**
      * One event can have many bookings.

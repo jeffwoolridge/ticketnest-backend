@@ -29,25 +29,40 @@ import java.math.BigDecimal;
 <span class="fc" id="L29">        return ResponseEntity.status(HttpStatus.CREATED).body(payment);</span>
     }
 
+//    @GetMapping(&quot;/{id}&quot;)
+//    public ResponseEntity&lt;PaymentResponse&gt; getPayment(@PathVariable Long id) {
+//        return ResponseEntity.ok(paymentService.getPaymentById(id));
+//    }
+//
+//    @GetMapping(&quot;/{id}&quot;)
+//    public ResponseEntity&lt;Payment&gt; getPaymentById(@PathVariable Long id) {
+//        return ResponseEntity.ok(paymentService.getPaymentById(id));
+//    }
+
+    @GetMapping(&quot;/{id}/customerName&quot;)
+    public ResponseEntity&lt;PaymentResponse&gt; getPayment(@PathVariable Long id) {
+<span class="nc" id="L44">        return ResponseEntity.ok(paymentService.getPaymentsById(id));</span>
+    }
+
     @GetMapping(&quot;/{id}&quot;)
-    public ResponseEntity&lt;Payment&gt; getPaymentById(@PathVariable Long id) {
-<span class="fc" id="L34">        return ResponseEntity.ok(paymentService.getPaymentById(id));</span>
+    public ResponseEntity&lt;Payment&gt; getPaymentRaw(@PathVariable Long id) {
+<span class="fc" id="L49">        return ResponseEntity.ok(paymentService.getPaymentById(id));</span>
     }
 
     @GetMapping
     public ResponseEntity&lt;?&gt; getAllPayments() {
-<span class="fc" id="L39">        return ResponseEntity.ok(paymentService.getAllPayments());</span>
+<span class="fc" id="L54">        return ResponseEntity.ok(paymentService.getAllPayments());</span>
     }
 
     @GetMapping(&quot;/user/{userId}&quot;)
     public ResponseEntity&lt;?&gt; getPaymentsByUser(@PathVariable Long userId) {
-<span class="fc" id="L44">        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));</span>
+<span class="fc" id="L59">        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));</span>
     }
 
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Void&gt; cancelPayment(@PathVariable Long id) {
-<span class="fc" id="L49">        paymentService.deletePayment(id);   // service method name is deletePayment</span>
-<span class="fc" id="L50">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L64">        paymentService.deletePayment(id);   // service method name is deletePayment</span>
+<span class="fc" id="L65">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

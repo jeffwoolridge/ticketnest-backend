@@ -12,64 +12,81 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * This component seeds Event data into database on application startup.
+ * It checks for existing events to avoid duplicates and adds a
+ * predefined set of events if they do not already exist.
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class EventDataSeeder implements CommandLineRunner {
 
+    /**
+     * A repository for managing Event entities,
+     * used to check for existing events and save new ones.
+     */
     private final EventRepository eventRepository;
 
+    /**
+     * Runs the data seeding process on application startup.
+     * @param args incoming main method arguments
+     */
     @Override
     public void run(String... args) {
-<span class="fc" id="L23">        seedEvents();</span>
-<span class="fc" id="L24">    }</span>
+<span class="fc" id="L37">        seedEvents();</span>
+<span class="fc" id="L38">    }</span>
 
+    /**
+     * Seeds the database with default events if they do not already exist.
+     */
     private void seedEvents() {
-<span class="fc" id="L27">        List&lt;Event&gt; defaultEvents = List.of(</span>
-<span class="fc" id="L28">                Event.builder()</span>
-<span class="fc" id="L29">                        .title(&quot;Tech Conference 2026&quot;)</span>
-<span class="fc" id="L30">                        .description(&quot;A conference for developers and tech enthusiasts.&quot;)</span>
-<span class="fc" id="L31">                        .date(LocalDate.of(2026, 5, 20))</span>
-<span class="fc" id="L32">                        .time(LocalTime.of(10, 0))</span>
-<span class="fc" id="L33">                        .price(new BigDecimal(&quot;49.99&quot;))</span>
-<span class="fc" id="L34">                        .totalTickets(200)</span>
-<span class="fc" id="L35">                        .availableTickets(200)</span>
-<span class="fc" id="L36">                        .location(&quot;St. John's Convention Centre&quot;)</span>
-<span class="fc" id="L37">                        .build(),</span>
+<span class="fc" id="L44">        List&lt;Event&gt; defaultEvents = List.of(</span>
+<span class="fc" id="L45">                Event.builder()</span>
+<span class="fc" id="L46">                        .title(&quot;Tech Conference 2026&quot;)</span>
+<span class="fc" id="L47">                        .description(&quot;A conference for developers and tech enthusiasts.&quot;)</span>
+<span class="fc" id="L48">                        .date(LocalDate.of(2026, 5, 20))</span>
+<span class="fc" id="L49">                        .time(LocalTime.of(10, 0))</span>
+<span class="fc" id="L50">                        .price(new BigDecimal(&quot;49.99&quot;))</span>
+<span class="fc" id="L51">                        .totalTickets(200)</span>
+<span class="fc" id="L52">                        .availableTickets(200)</span>
+<span class="fc" id="L53">                        .location(&quot;St. John's Convention Centre&quot;)</span>
+<span class="fc" id="L54">                        .build(),</span>
 
-<span class="fc" id="L39">                Event.builder()</span>
-<span class="fc" id="L40">                        .title(&quot;Music Night Live&quot;)</span>
-<span class="fc" id="L41">                        .description(&quot;Live music event with guest artists.&quot;)</span>
-<span class="fc" id="L42">                        .date(LocalDate.of(2026, 6, 10))</span>
-<span class="fc" id="L43">                        .time(LocalTime.of(19, 30))</span>
-<span class="fc" id="L44">                        .price(new BigDecimal(&quot;35.00&quot;))</span>
-<span class="fc" id="L45">                        .totalTickets(150)</span>
-<span class="fc" id="L46">                        .availableTickets(150)</span>
-<span class="fc" id="L47">                        .location(&quot;Downtown Arena&quot;)</span>
-<span class="fc" id="L48">                        .build(),</span>
+<span class="fc" id="L56">                Event.builder()</span>
+<span class="fc" id="L57">                        .title(&quot;Music Night Live&quot;)</span>
+<span class="fc" id="L58">                        .description(&quot;Live music event with guest artists.&quot;)</span>
+<span class="fc" id="L59">                        .date(LocalDate.of(2026, 6, 10))</span>
+<span class="fc" id="L60">                        .time(LocalTime.of(19, 30))</span>
+<span class="fc" id="L61">                        .price(new BigDecimal(&quot;35.00&quot;))</span>
+<span class="fc" id="L62">                        .totalTickets(150)</span>
+<span class="fc" id="L63">                        .availableTickets(150)</span>
+<span class="fc" id="L64">                        .location(&quot;Downtown Arena&quot;)</span>
+<span class="fc" id="L65">                        .build(),</span>
 
-<span class="fc" id="L50">                Event.builder()</span>
-<span class="fc" id="L51">                        .title(&quot;Startup Networking Meetup&quot;)</span>
-<span class="fc" id="L52">                        .description(&quot;Meet founders, developers, and investors.&quot;)</span>
-<span class="fc" id="L53">                        .date(LocalDate.of(2026, 7, 5))</span>
-<span class="fc" id="L54">                        .time(LocalTime.of(18, 0))</span>
-<span class="fc" id="L55">                        .price(new BigDecimal(&quot;15.00&quot;))</span>
-<span class="fc" id="L56">                        .totalTickets(100)</span>
-<span class="fc" id="L57">                        .availableTickets(100)</span>
-<span class="fc" id="L58">                        .location(&quot;Innovation Hub&quot;)</span>
-<span class="fc" id="L59">                        .build()</span>
+<span class="fc" id="L67">                Event.builder()</span>
+<span class="fc" id="L68">                        .title(&quot;Startup Networking Meetup&quot;)</span>
+<span class="fc" id="L69">                        .description(&quot;Meet founders, developers, and investors.&quot;)</span>
+<span class="fc" id="L70">                        .date(LocalDate.of(2026, 7, 5))</span>
+<span class="fc" id="L71">                        .time(LocalTime.of(18, 0))</span>
+<span class="fc" id="L72">                        .price(new BigDecimal(&quot;15.00&quot;))</span>
+<span class="fc" id="L73">                        .totalTickets(100)</span>
+<span class="fc" id="L74">                        .availableTickets(100)</span>
+<span class="fc" id="L75">                        .location(&quot;Innovation Hub&quot;)</span>
+<span class="fc" id="L76">                        .build()</span>
         );
 
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (Event event : defaultEvents) {</span>
-<span class="fc" id="L63">            boolean exists = eventRepository.existsByTitleAndDateAndTime(</span>
-<span class="fc" id="L64">                    event.getTitle(),</span>
-<span class="fc" id="L65">                    event.getDate(),</span>
-<span class="fc" id="L66">                    event.getTime()</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        for (Event event : defaultEvents) {</span>
+<span class="fc" id="L80">            boolean exists = eventRepository.existsByTitleAndDateAndTime(</span>
+<span class="fc" id="L81">                    event.getTitle(),</span>
+<span class="fc" id="L82">                    event.getDate(),</span>
+<span class="fc" id="L83">                    event.getTime()</span>
             );
 
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (!exists) {</span>
-<span class="fc" id="L70">                eventRepository.save(event);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (!exists) {</span>
+<span class="fc" id="L87">                eventRepository.save(event);</span>
             }
-<span class="fc" id="L72">        }</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L89">        }</span>
+<span class="fc" id="L90">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

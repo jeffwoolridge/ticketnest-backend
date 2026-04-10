@@ -11,43 +11,99 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * EventController is a REST controller that handles HTTP requests related to events. It provides endpoints for
+ * creating, retrieving, updating, and deleting events. The controller uses the EventService to perform the necessary
+ * business logic and interacts with the EventRepository for data persistence. The endpoints are secured with role-based
+ * access control, allowing only users with the ADMIN role to create, update, or delete events, while any authenticated
+ * user can retrieve event information.
+ */
 @RestController
 @RequestMapping(&quot;/api/events&quot;)
-<span class="fc" id="L16">public class EventController {</span>
+<span class="fc" id="L23">public class EventController {</span>
 
+    /**
+     * The EventService is injected into the controller to handle the business logic related to events. It provides
+     * methods for creating, retrieving, updating, and deleting events. The controller delegates the actual operations
+     * to the service layer, allowing for a separation of concerns and better organization of the code. The EventService
+     * interacts with the EventRepository to perform database operations, while the controller focuses on handling HTTP
+     * requests and responses.
+     */
     @Autowired
     private EventService eventService;
 
+    /**
+     * Endpoint to create a new event. This endpoint is secured and can only be accessed by users with the ADMIN role.
+     * @param event the event object to be created, which is validated using @Valid to ensure that it meets the defined constraints.
+     * @return a ResponseEntity containing the created event and an HTTP status of CREATED (201) if successful, or an
+     *          error message if the event already exists or if validation fails.
+     */
     @PostMapping
     @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
     public ResponseEntity&lt;Event&gt; createEvent(@Valid @RequestBody Event event) {
-<span class="fc" id="L24">        Event savedEvent = eventService.createEvent(event);</span>
-<span class="fc" id="L25">        return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);</span>
+<span class="fc" id="L44">        Event savedEvent = eventService.createEvent(event);</span>
+<span class="fc" id="L45">        return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);</span>
     }
 
+    /**
+     * Endpoint to retrieve an event by its ID. This endpoint can be accessed by any authenticated user. It takes the
+     * event ID as a path variable and returns the corresponding event if found. If the event is not found, it throws
+     * an IllegalArgumentException with a message indicating that the event was not found.
+     * @param id the ID of the event to retrieve, which is passed as a path variable in the URL.
+     * @return a ResponseEntity containing the retrieved event and an HTTP status of OK (200) if successful, or an
+     *          error message if the event is not found.
+     */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Event&gt; getEventById(@PathVariable Long id) {
-<span class="fc" id="L30">        return ResponseEntity.ok(eventService.getEventById(id));</span>
+<span class="fc" id="L58">        return ResponseEntity.ok(eventService.getEventById(id));</span>
     }
 
+    /**
+     * Endpoint to retrieve all events. This endpoint can be accessed by any authenticated user. It returns a list of
+     * all events available in the system. The response is wrapped in a ResponseEntity with an HTTP status of OK (200).
+     * If there are no events, it returns an empty list.
+     * @return a ResponseEntity containing a list of all events and an HTTP status of OK (200). If there are no events,
+     *      it returns an empty list.
+     */
     @GetMapping
     public ResponseEntity&lt;?&gt; getAllEvents() {
-<span class="fc" id="L35">        System.out.println(&quot;EventController.getAllEvents()&quot;);</span>
-<span class="fc" id="L36">        return ResponseEntity.ok(eventService.getAllEvents());</span>
+<span class="fc" id="L70">        System.out.println(&quot;EventController.getAllEvents()&quot;);</span>
+<span class="fc" id="L71">        return ResponseEntity.ok(eventService.getAllEvents());</span>
     }
 
+    /**
+     * Endpoint to update an existing event. This endpoint is secured and can only be accessed by users with the ADMIN
+     * role. It takes the event ID as a path variable and the updated event details in the request body. The updated
+     * event details are validated using @Valid to ensure that they meet the defined constraints. If the event is
+     * successfully updated, it returns the updated event with an HTTP status of OK (200). If the event is not found,
+     * it throws an IllegalArgumentException with a message indicating that the event was not found. If the updated
+     * event details are invalid, it returns an error message with an appropriate HTTP status code.
+     * @param id the ID of the event to update, which is passed as a path variable in the URL.
+     * @param eventDetails the updated event details, which are validated using @Valid.
+     * @return a ResponseEntity containing the updated event and an HTTP status of OK (200) if successful, or an
+     *          error message if the event is not found or if the updated event details are invalid.
+     */
     @PutMapping(&quot;/{id}&quot;)
     @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
     public ResponseEntity&lt;Event&gt; updateEvent(@PathVariable Long id,
                                              @Valid @RequestBody Event eventDetails) {
-<span class="fc" id="L43">        return ResponseEntity.ok(eventService.updateEvent(id, eventDetails));</span>
+<span class="fc" id="L90">        return ResponseEntity.ok(eventService.updateEvent(id, eventDetails));</span>
     }
 
+    /**
+     * Endpoint to delete an event by its ID. This endpoint is secured and can only be accessed by users with the ADMIN
+     * role. It takes the event ID as a path variable and deletes the corresponding event if found. If the event is
+     * successfully deleted, it returns an HTTP status of NO_CONTENT (204). If the event is not found, it throws an
+     * IllegalArgumentException with a message indicating that the event was not found.
+     * @param id the ID of the event to delete, which is passed as a path variable in the URL.
+     * @return a ResponseEntity with an HTTP status of NO_CONTENT (204) if successful, or an error message if the
+     * event is not found.
+     */
     @DeleteMapping(&quot;/{id}&quot;)
     @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
     public ResponseEntity&lt;Void&gt; deleteEvent(@PathVariable Long id) {
-<span class="fc" id="L49">        eventService.deleteEvent(id);</span>
-<span class="fc" id="L50">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L105">        eventService.deleteEvent(id);</span>
+<span class="fc" id="L106">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

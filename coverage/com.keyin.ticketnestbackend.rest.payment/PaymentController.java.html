@@ -13,56 +13,88 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
+/**
+ * Controller class for handling payment-related API endpoints.
+ * Provides endpoints for creating, retrieving, and canceling payments.
+ * Each payment is associated with a booking, and a booking is only
+ * considered successful after a successful payment.
+ * The controller uses the PaymentService to perform business logic and data access operations.
+ */
 @RestController
 @RequestMapping(&quot;/api/payments&quot;)
-<span class="fc" id="L18">public class PaymentController {</span>
+<span class="fc" id="L25">public class PaymentController {</span>
 
+    /**
+     * Service for managing payment operations
+     */
     @Autowired
     private PaymentService paymentService;
 
+    /**
+     * Creates a new payment for a given booking.
+     * @param bookingId the ID of the booking associated with the payment
+     * @param amountPaid the amount paid by the user, must be a positive value
+     * @return the created payment with HTTP status 201 (Created)
+     */
     @PostMapping
     public ResponseEntity&lt;Payment&gt; createPayment(
             @RequestParam Long bookingId,
             @RequestParam @NotNull @Positive BigDecimal amountPaid
     ) {
-<span class="fc" id="L28">        Payment payment = paymentService.createPayment(bookingId, amountPaid);</span>
-<span class="fc" id="L29">        return ResponseEntity.status(HttpStatus.CREATED).body(payment);</span>
+<span class="fc" id="L44">        Payment payment = paymentService.createPayment(bookingId, amountPaid);</span>
+<span class="fc" id="L45">        return ResponseEntity.status(HttpStatus.CREATED).body(payment);</span>
     }
 
-//    @GetMapping(&quot;/{id}&quot;)
-//    public ResponseEntity&lt;PaymentResponse&gt; getPayment(@PathVariable Long id) {
-//        return ResponseEntity.ok(paymentService.getPaymentById(id));
-//    }
-//
-//    @GetMapping(&quot;/{id}&quot;)
-//    public ResponseEntity&lt;Payment&gt; getPaymentById(@PathVariable Long id) {
-//        return ResponseEntity.ok(paymentService.getPaymentById(id));
-//    }
-
+    /**
+     * Retrieves payment details by payment ID, including the associated customer's name.
+     * @param id the ID of the payment to retrieve
+     * @return the payment details along with the customer's name,
+     *      or HTTP status 404 if not found
+     */
     @GetMapping(&quot;/{id}/customerName&quot;)
     public ResponseEntity&lt;PaymentResponse&gt; getPayment(@PathVariable Long id) {
-<span class="nc" id="L44">        return ResponseEntity.ok(paymentService.getPaymentsById(id));</span>
+<span class="nc" id="L56">        return ResponseEntity.ok(paymentService.getPaymentsById(id));</span>
     }
 
+    /**
+     * Retrieves payment details by payment ID without the customer's name.
+     * @param id the ID of the payment to retrieve
+     * @return the payment details without the customer's name,
+     *      or HTTP status 404 if not found
+     */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Payment&gt; getPaymentRaw(@PathVariable Long id) {
-<span class="fc" id="L49">        return ResponseEntity.ok(paymentService.getPaymentById(id));</span>
+<span class="fc" id="L67">        return ResponseEntity.ok(paymentService.getPaymentById(id));</span>
     }
 
+    /**
+     * Retrieves all payments in the system.
+     * @return a list of all payments with HTTP status 200 (OK)
+     */
     @GetMapping
     public ResponseEntity&lt;?&gt; getAllPayments() {
-<span class="fc" id="L54">        return ResponseEntity.ok(paymentService.getAllPayments());</span>
+<span class="fc" id="L76">        return ResponseEntity.ok(paymentService.getAllPayments());</span>
     }
 
+    /**
+     * Retrieves all payments made by a specific user, identified by their user ID.
+     * @param userId the ID of the user whose payments are to be retrieved
+     * @return a list of payments made by the specified user with HTTP status 200 (OK)
+     */
     @GetMapping(&quot;/user/{userId}&quot;)
     public ResponseEntity&lt;?&gt; getPaymentsByUser(@PathVariable Long userId) {
-<span class="fc" id="L59">        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));</span>
+<span class="fc" id="L86">        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));</span>
     }
 
+    /**
+     * Cancels a payment by its ID. This will delete the payment record from the system.
+     * @param id the ID of the payment to cancel
+     * @return HTTP status 204 (No Content) if the payment was successfully canceled,
+     */
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;Void&gt; cancelPayment(@PathVariable Long id) {
-<span class="fc" id="L64">        paymentService.deletePayment(id);   // service method name is deletePayment</span>
-<span class="fc" id="L65">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L96">        paymentService.deletePayment(id);   // service method name is deletePayment</span>
+<span class="fc" id="L97">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -9,28 +9,43 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+/**
+ * Global exception handler for the application.
+ * This class handles exceptions thrown by controllers and services,
+ * providing consistent error responses to the client.
+ */
 @RestControllerAdvice
-<span class="fc" id="L13">public class GlobalExceptionHandler {</span>
+<span class="fc" id="L18">public class GlobalExceptionHandler {</span>
 
+    /**
+     * Handles IllegalArgumentExceptions thrown by controllers and services.
+     * @param ex the exception to handle
+     * @return a ResponseEntity containing the error message and a BAD_REQUEST status
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleIllegalArgument(IllegalArgumentException ex) {
-<span class="nc" id="L17">        return ResponseEntity</span>
-<span class="nc" id="L18">                .status(HttpStatus.BAD_REQUEST)</span>
-<span class="nc" id="L19">                .body(Map.of(&quot;message&quot;, ex.getMessage()));</span>
+<span class="nc" id="L27">        return ResponseEntity</span>
+<span class="nc" id="L28">                .status(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L29">                .body(Map.of(&quot;message&quot;, ex.getMessage()));</span>
     }
 
+    /**
+     * Handles MethodArgumentNotValidExceptions thrown when validation of request bodies fails.
+     * @param ex the exception to handle
+     * @return a ResponseEntity containing the first validation error message and a BAD_REQUEST status
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleValidationErrors(MethodArgumentNotValidException ex) {
-<span class="nc" id="L24">        String message = ex.getBindingResult()</span>
-<span class="nc" id="L25">                .getFieldErrors()</span>
-<span class="nc" id="L26">                .stream()</span>
-<span class="nc" id="L27">                .findFirst()</span>
-<span class="nc" id="L28">                .map(DefaultMessageSourceResolvable::getDefaultMessage)</span>
-<span class="nc" id="L29">                .orElse(&quot;Validation error&quot;);</span>
+<span class="nc" id="L39">        String message = ex.getBindingResult()</span>
+<span class="nc" id="L40">                .getFieldErrors()</span>
+<span class="nc" id="L41">                .stream()</span>
+<span class="nc" id="L42">                .findFirst()</span>
+<span class="nc" id="L43">                .map(DefaultMessageSourceResolvable::getDefaultMessage)</span>
+<span class="nc" id="L44">                .orElse(&quot;Validation error&quot;);</span>
 
-<span class="nc" id="L31">        return ResponseEntity</span>
-<span class="nc" id="L32">                .status(HttpStatus.BAD_REQUEST)</span>
-<span class="nc" id="L33">                .body(Map.of(&quot;message&quot;, message));</span>
+<span class="nc" id="L46">        return ResponseEntity</span>
+<span class="nc" id="L47">                .status(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L48">                .body(Map.of(&quot;message&quot;, message));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

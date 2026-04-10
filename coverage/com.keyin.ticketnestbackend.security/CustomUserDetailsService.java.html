@@ -6,16 +6,38 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * CustomUserDetailsService is a service that implements UserDetailsService
+ * to load user details from the database.
+ * It uses the UserRepository to find a user by their email and returns an
+ * AppUserDetails object that Spring Security can use for authentication and authorization.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    /**
+     * The UserRepository is injected into the CustomUserDetailsService
+     * to access user data from the database.
+     */
     private final UserRepository repo;
-<span class="fc" id="L12">    public CustomUserDetailsService(UserRepository repo) { this.repo = repo; }</span>
 
+    /**
+     * Constructor for CustomUserDetailsService that takes a UserRepository as a parameter.
+     * @param repo the UserRepository to access user data from the database
+     */
+<span class="fc" id="L27">    public CustomUserDetailsService(UserRepository repo) { this.repo = repo; }</span>
+
+    /**
+     * Loads the user details by their email. If the user is not found,
+     * it throws a UsernameNotFoundException.
+     * @param email the username identifying the user whose data is required.
+     * @return a fully populated UserDetails object (never null)
+     * @throws UsernameNotFoundException if the user could not be found or the user has no GrantedAuthority
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-<span class="fc" id="L16">        var user = repo.findByEmail(email);</span>
-<span class="pc bpc" id="L17" title="1 of 2 branches missed.">        if (user == null) throw new UsernameNotFoundException(&quot;User not found&quot;);</span>
-<span class="fc" id="L18">        return new AppUserDetails(user);</span>
+<span class="fc" id="L38">        var user = repo.findByEmail(email);</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (user == null) throw new UsernameNotFoundException(&quot;User not found&quot;);</span>
+<span class="fc" id="L40">        return new AppUserDetails(user);</span>
     }
 }
 

@@ -3,7 +3,12 @@
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-<span class="fc" id="L6">public record AuthRequest(</span>
+/**
+ * Data transfer object for authentication requests, containing the user's email and password.
+ * @param email the user's email address, which must be a valid email format and cannot be blank
+ * @param password the user's password, which cannot be blank
+ */
+<span class="fc" id="L11">public record AuthRequest(</span>
         @NotBlank(message = &quot;Email is required&quot;)
         @Email(message = &quot;Enter a valid email address&quot;)
                 String email,

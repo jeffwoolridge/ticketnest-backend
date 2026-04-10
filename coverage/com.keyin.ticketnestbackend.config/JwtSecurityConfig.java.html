@@ -21,26 +21,54 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Configuration class for setting up JWT-based security in the application.
+ * It defines the security filter chain, password encoder, authentication manager,
+ * and CORS configuration.
+ * The class is annotated with @Configuration to indicate that it provides
+ * Spring beans, and @EnableMethodSecurity to enable method-level security annotations.
+ */
 @Configuration
 @EnableMethodSecurity
 public class JwtSecurityConfig {
+    /**
+     * Utility class for handling JWT operations such as token generation and validation.
+     */
     private final JwtUtil jwtUtil;
+
+    /**
+     * Custom user details service that loads user-specific data during authentication.
+     */
     private final CustomUserDetailsService uds;
 
-<span class="fc" id="L30">    public JwtSecurityConfig(JwtUtil jwtUtil, CustomUserDetailsService uds) {</span>
-<span class="fc" id="L31">        this.jwtUtil = jwtUtil;</span>
-<span class="fc" id="L32">        this.uds = uds;</span>
-<span class="fc" id="L33">    }</span>
+    /**
+     * Constructs a JwtSecurityConfig with the required dependencies.
+     * @param jwtUtil utility for JWT operations
+     * @param uds custom user details service for loading user data during authentication
+     */
+<span class="fc" id="L49">    public JwtSecurityConfig(JwtUtil jwtUtil, CustomUserDetailsService uds) {</span>
+<span class="fc" id="L50">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L51">        this.uds = uds;</span>
+<span class="fc" id="L52">    }</span>
 
-@Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-<span class="fc" id="L37">    JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, uds);</span>
+    /**
+     * Defines the security filter chain for the application,
+     * configuring HTTP security settings,
+     * including CSRF protection, CORS configuration,
+     * request authorization rules, and JWT authentication filter.
+     * @param http the HttpSecurity object used to configure security settings
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L65">        JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtUtil, uds);</span>
 
-<span class="fc" id="L39">    http</span>
-<span class="fc" id="L40">            .csrf(csrf -&gt; csrf.disable())</span>
-<span class="fc" id="L41">            .cors(cors -&gt; cors.configurationSource(corsConfigurationSource()))</span>
-<span class="fc" id="L42">            .authorizeHttpRequests(auth -&gt; auth</span>
-<span class="fc" id="L43">                    .requestMatchers(</span>
+<span class="fc" id="L67">        http</span>
+<span class="fc" id="L68">            .csrf(csrf -&gt; csrf.disable())</span>
+<span class="fc" id="L69">            .cors(cors -&gt; cors.configurationSource(corsConfigurationSource()))</span>
+<span class="fc" id="L70">            .authorizeHttpRequests(auth -&gt; auth</span>
+<span class="fc" id="L71">                    .requestMatchers(</span>
                             &quot;/error&quot;,
                             &quot;/favicon.ico&quot;,
                             &quot;/actuator/health&quot;,
@@ -55,39 +83,55 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                             &quot;/api/payments&quot;,
                             &quot;/api/users/**&quot;,
                             &quot;/api/users&quot;
-<span class="fc" id="L58">                    ).permitAll()</span>
-<span class="fc" id="L59">                    .anyRequest().authenticated()</span>
+<span class="fc" id="L86">                    ).permitAll()</span>
+<span class="fc" id="L87">                    .anyRequest().authenticated()</span>
             )
-<span class="fc" id="L61">            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);</span>
+<span class="fc" id="L89">            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);</span>
 
-<span class="fc" id="L63">    return http.build();</span>
-}
+<span class="fc" id="L91">        return http.build();</span>
+    }
 
+    /**
+     * Defines a bean for password encoding using BCryptPasswordEncoder.
+     * @return a PasswordEncoder instance that uses BCrypt hashing algorithm
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
-<span class="fc" id="L68">        return new BCryptPasswordEncoder();</span>
+<span class="fc" id="L100">        return new BCryptPasswordEncoder();</span>
     }
 
+    /**
+     * Defines a bean for the authentication manager,
+     * which is responsible for processing authentication requests.
+     *
+     * @param uds the UserDetailsService used to load user-specific data during authentication
+     * @return an AuthenticationManager instance configured with a DaoAuthenticationProvider
+     */
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService uds) {
-<span class="fc" id="L73">        return new ProviderManager(new org.springframework.security.authentication.dao.DaoAuthenticationProvider() {{</span>
-<span class="fc" id="L74">            setUserDetailsService(uds);</span>
-<span class="fc" id="L75">            setPasswordEncoder(passwordEncoder());</span>
-<span class="fc" id="L76">        }});</span>
+<span class="fc" id="L112">        return new ProviderManager(new org.springframework.security.authentication.dao.DaoAuthenticationProvider() {{</span>
+<span class="fc" id="L113">            setUserDetailsService(uds);</span>
+<span class="fc" id="L114">            setPasswordEncoder(passwordEncoder());</span>
+<span class="fc" id="L115">        }});</span>
     }
 
+    /**
+     * Defines a bean for CORS configuration, allowing cross-origin requests from specified origins,
+     * with allowed methods, headers, and credentials settings.
+     * @return a CorsConfigurationSource that provides the CORS configuration for the application
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-<span class="fc" id="L81">        CorsConfiguration configuration = new CorsConfiguration();</span>
-<span class="fc" id="L82">        configuration.setAllowedOrigins(List.of(&quot;http://localhost:5173&quot;, &quot;http://localhost:5174&quot;));</span>
-<span class="fc" id="L83">        configuration.setAllowedMethods(Arrays.asList(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;, &quot;PATCH&quot;));</span>
-<span class="fc" id="L84">        configuration.setAllowedHeaders(Arrays.asList(&quot;*&quot;));</span>
-<span class="fc" id="L85">        configuration.setAllowCredentials(true);</span>
-<span class="fc" id="L86">        configuration.setMaxAge(3600L);</span>
+<span class="fc" id="L125">        CorsConfiguration configuration = new CorsConfiguration();</span>
+<span class="fc" id="L126">        configuration.setAllowedOrigins(List.of(&quot;http://localhost:5173&quot;, &quot;http://localhost:5174&quot;));</span>
+<span class="fc" id="L127">        configuration.setAllowedMethods(Arrays.asList(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;, &quot;PATCH&quot;));</span>
+<span class="fc" id="L128">        configuration.setAllowedHeaders(Arrays.asList(&quot;*&quot;));</span>
+<span class="fc" id="L129">        configuration.setAllowCredentials(true);</span>
+<span class="fc" id="L130">        configuration.setMaxAge(3600L);</span>
 
-<span class="fc" id="L88">        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();</span>
-<span class="fc" id="L89">        source.registerCorsConfiguration(&quot;/**&quot;, configuration);</span>
-<span class="fc" id="L90">        return source;</span>
+<span class="fc" id="L132">        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();</span>
+<span class="fc" id="L133">        source.registerCorsConfiguration(&quot;/**&quot;, configuration);</span>
+<span class="fc" id="L134">        return source;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

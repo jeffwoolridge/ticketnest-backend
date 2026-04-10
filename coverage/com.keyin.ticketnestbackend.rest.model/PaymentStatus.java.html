@@ -4,7 +4,15 @@
  * Represents the status of a payment.
  */
 <span class="fc" id="L6">public enum PaymentStatus {</span>
-<span class="fc" id="L7">    SUCCESS,</span>
-<span class="fc" id="L8">    FAIL</span>
+    /**
+     * SUCCESS indicates that the payment was processed successfully.
+     */
+<span class="fc" id="L10">    SUCCESS,</span>
+
+    /**
+     * FAIL indicates that the payment processing failed, which could be due to various reasons such as insufficient
+     * funds, invalid payment details, or technical issues.
+     */
+<span class="fc" id="L16">    FAIL</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

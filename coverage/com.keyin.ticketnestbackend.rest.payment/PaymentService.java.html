@@ -91,11 +91,17 @@ public class PaymentService {
 <span class="pc" id="L91">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Payment not found.&quot;));</span>
     }
 
+    /**
+     * Retrieves payment details by payment ID, including the associated customer's name.
+     * @param id the ID of the payment to retrieve
+     * @return the payment details along with the customer's name
+     * @throws RuntimeException if payment is not found
+     */
     public PaymentResponse getPaymentsById(Long id) {
-<span class="nc" id="L95">        Payment payment = paymentRepository.findById(id)</span>
-<span class="nc" id="L96">                .orElseThrow(() -&gt; new RuntimeException(&quot;Payment not found&quot;));</span>
+<span class="nc" id="L101">        Payment payment = paymentRepository.findById(id)</span>
+<span class="nc" id="L102">                .orElseThrow(() -&gt; new RuntimeException(&quot;Payment not found&quot;));</span>
 
-<span class="nc" id="L98">        return toResponse(payment);</span>
+<span class="nc" id="L104">        return toResponse(payment);</span>
     }
 
     /**
@@ -103,14 +109,11 @@ public class PaymentService {
      *
      * @return list of all payments
      */
-//    public List&lt;Payment&gt; getAllPayments() {
-//        return paymentRepository.findAll();
-//    }
     public List&lt;PaymentResponse&gt; getAllPayments() {
-<span class="fc" id="L110">        return paymentRepository.findAll()</span>
-<span class="fc" id="L111">                .stream()</span>
-<span class="fc" id="L112">                .map(this::toResponse)</span>
-<span class="fc" id="L113">                .toList();</span>
+<span class="fc" id="L113">        return paymentRepository.findAll()</span>
+<span class="fc" id="L114">                .stream()</span>
+<span class="fc" id="L115">                .map(this::toResponse)</span>
+<span class="fc" id="L116">                .toList();</span>
     }
 
     /**
@@ -120,7 +123,7 @@ public class PaymentService {
      * @return list of the user's payments
      */
     public List&lt;Payment&gt; getPaymentsByUserId(Long userId) {
-<span class="fc" id="L123">        return paymentRepository.findByBookingUserId(userId);</span>
+<span class="fc" id="L126">        return paymentRepository.findByBookingUserId(userId);</span>
     }
 
     /**
@@ -130,9 +133,9 @@ public class PaymentService {
      * @throws IllegalArgumentException if payment is not found
      */
     public void deletePayment(Long id) {
-<span class="fc" id="L133">        Payment payment = getPaymentById(id);</span>
-<span class="fc" id="L134">        paymentRepository.delete(payment);</span>
-<span class="fc" id="L135">    }</span>
+<span class="fc" id="L136">        Payment payment = getPaymentById(id);</span>
+<span class="fc" id="L137">        paymentRepository.delete(payment);</span>
+<span class="fc" id="L138">    }</span>
 
     /**
      * Validates that the entered payment amount exactly matches the booking total price.
@@ -142,22 +145,27 @@ public class PaymentService {
      * @throws IllegalArgumentException if the amount does not match
      */
     public void validatePaymentAmount(BigDecimal totalPrice, BigDecimal amountPaid) {
-<span class="nc bnc" id="L145" title="All 4 branches missed.">        if (amountPaid == null || amountPaid.compareTo(totalPrice) != 0) {</span>
-<span class="nc" id="L146">            throw new IllegalArgumentException(&quot;Payment amount must exactly match the booking total price.&quot;);</span>
+<span class="nc bnc" id="L148" title="All 4 branches missed.">        if (amountPaid == null || amountPaid.compareTo(totalPrice) != 0) {</span>
+<span class="nc" id="L149">            throw new IllegalArgumentException(&quot;Payment amount must exactly match the booking total price.&quot;);</span>
         }
-<span class="nc" id="L148">    }</span>
+<span class="nc" id="L151">    }</span>
 
+    /**
+     * Converts a Payment entity to a PaymentResponse DTO, including the associated customer's name.
+     * @param payment the Payment entity to convert
+     * @return a PaymentResponse containing payment details and the customer's name
+     */
     private PaymentResponse toResponse(Payment payment) {
-<span class="fc" id="L151">        return new PaymentResponse(</span>
-<span class="fc" id="L152">                payment.getId(),</span>
-<span class="fc" id="L153">                payment.getAmountPaid(),</span>
-<span class="fc" id="L154">                payment.getStatus(),</span>
-<span class="fc" id="L155">                payment.getPaymentDate(),</span>
-<span class="fc" id="L156">                payment.getBooking().getId(),</span>
-<span class="fc" id="L157">                payment.getBooking().getBookingNumber(),</span>
-<span class="fc" id="L158">                payment.getBooking().getUser().getId(),</span>
-<span class="fc" id="L159">                payment.getBooking().getUser().getFirstName() + &quot; &quot; +</span>
-<span class="fc" id="L160">                        payment.getBooking().getUser().getLastName()</span>
+<span class="fc" id="L159">        return new PaymentResponse(</span>
+<span class="fc" id="L160">                payment.getId(),</span>
+<span class="fc" id="L161">                payment.getAmountPaid(),</span>
+<span class="fc" id="L162">                payment.getStatus(),</span>
+<span class="fc" id="L163">                payment.getPaymentDate(),</span>
+<span class="fc" id="L164">                payment.getBooking().getId(),</span>
+<span class="fc" id="L165">                payment.getBooking().getBookingNumber(),</span>
+<span class="fc" id="L166">                payment.getBooking().getUser().getId(),</span>
+<span class="fc" id="L167">                payment.getBooking().getUser().getFirstName() + &quot; &quot; +</span>
+<span class="fc" id="L168">                        payment.getBooking().getUser().getLastName()</span>
         );
     }
 }

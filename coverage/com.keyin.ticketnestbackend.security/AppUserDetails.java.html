@@ -10,34 +10,86 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * AppUserDetails is a custom implementation of Spring Security's UserDetails interface.
+ * It wraps our User entity and provides necessary information for authentication and
+ * authorization. The getAuthorities method converts the user's role into a
+ * GrantedAuthority format that Spring Security can understand.
+ * The other methods indicate that the user's account is active and valid.
+ */
 @Getter
 public class AppUserDetails implements UserDetails {
+    /**
+     * The User entity that this AppUserDetails wraps.
+     * It contains the user's email, password, and role.
+     * This information is used to authenticate the user and determine their permissions.
+     */
     private final User user;
 
-<span class="fc" id="L17">    public AppUserDetails(User user) { this.user = user; }</span>
+    /**
+     * Constructor that initializes the AppUserDetails with a User entity.
+     * @param user the User entity to wrap.
+     *             This should contain the user's email, password, and role.
+     */
+<span class="fc" id="L34">    public AppUserDetails(User user) { this.user = user; }</span>
 
+    /**
+     * Returns a collection of authorities granted to the user. In this implementation,
+     * we convert the user's role into a SimpleGrantedAuthority with the prefix &quot;ROLE_&quot;.
+     * @return a collection of GrantedAuthority objects representing the user's permissions.
+     */
     @Override
     public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
-<span class="fc" id="L21">        return List.of(new SimpleGrantedAuthority(&quot;ROLE_&quot; + user.getRole().name()));</span>
+<span class="fc" id="L43">        return List.of(new SimpleGrantedAuthority(&quot;ROLE_&quot; + user.getRole().name()));</span>
     }
 
+    /**
+     * Returns the password used to authenticate the user. In this implementation, we return
+     * the password from the wrapped User entity.
+     * @return the user's password.
+     */
     @Override
-<span class="nc" id="L25">    public String getPassword() { return user.getPassword(); }</span>
+<span class="nc" id="L52">    public String getPassword() { return user.getPassword(); }</span>
 
+    /**
+     * Returns the username used to authenticate the user. In this implementation, we return
+     * the email from the wrapped User entity, as we are using email as the username.
+     * @return the user's email.
+     */
     @Override
-<span class="fc" id="L28">    public String getUsername() { return user.getEmail(); }</span>
+<span class="fc" id="L60">    public String getUsername() { return user.getEmail(); }</span>
 
+    /**
+     * Indicates whether the user's account has expired. In this implementation, we return true,
+     * indicating that the account is valid and has not expired.
+     * @return true if the account has not expired, false otherwise.
+     */
     @Override
-<span class="nc" id="L31">    public boolean isAccountNonExpired() { return true; }</span>
+<span class="nc" id="L68">    public boolean isAccountNonExpired() { return true; }</span>
 
+    /**
+     * Indicates whether the user's account is locked. In this implementation, we return true,
+     * indicating that the account is not locked and is valid.
+     * @return true if the account is not locked, false otherwise.
+     */
     @Override
-<span class="nc" id="L34">    public boolean isAccountNonLocked() { return true; }</span>
+<span class="nc" id="L76">    public boolean isAccountNonLocked() { return true; }</span>
 
+    /**
+     * Indicates whether the user's credentials (password) has expired. In this implementation, we return true,
+     * indicating that the credentials are valid and have not expired.
+     * @return true if the credentials have not expired, false otherwise.
+     */
     @Override
-<span class="nc" id="L37">    public boolean isCredentialsNonExpired() { return true; }</span>
+<span class="nc" id="L84">    public boolean isCredentialsNonExpired() { return true; }</span>
 
+    /**
+     * Indicates whether the user is enabled or disabled. In this implementation, we return true,
+     * indicating that the user is enabled and can authenticate.
+     * @return true if the user is enabled, false otherwise.
+     */
     @Override
-<span class="nc" id="L40">    public boolean isEnabled() { return true; }</span>
+<span class="nc" id="L92">    public boolean isEnabled() { return true; }</span>
 
 }
 

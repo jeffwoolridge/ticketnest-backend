@@ -17,6 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * BookingServiceTest is a unit test class for the BookingService. It uses Mockito to mock the dependencies
+ * of the BookingService, such as the BookingRepository, UserRepository, EventRepository, and PaymentRepository.
+ * The tests verify that the createBooking method behaves correctly under different scenarios, such as successfully
+ * creating a booking and throwing an exception when there are not enough tickets available. The tests check that the
+ * booking is created with the correct user, event, quantity, total price, and booking number.
+ */
 class BookingServiceTest {
 
     private final BookingRepository bookingRepository = mock(BookingRepository.class);
@@ -27,6 +34,9 @@ class BookingServiceTest {
     private final BookingService bookingService =
             new BookingService(bookingRepository, userRepository, eventRepository, paymentRepository);
 
+    /**
+     * Tests that a booking can be successfully created when valid user, event, and quantity are provided.
+     */
     @Test
     void createBooking_success() {
         User user = new User();
@@ -57,6 +67,10 @@ class BookingServiceTest {
         assertThat(booking.getBookingNumber()).startsWith("BKG-");
     }
 
+    /**
+     * Tests that an IllegalArgumentException is thrown when trying to create a booking with a quantity that exceeds
+     * the available tickets for the event.
+     */
     @Test
     void createBooking_throwsIfNotEnoughTickets() {
         User user = new User();

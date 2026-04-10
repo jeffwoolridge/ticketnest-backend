@@ -26,23 +26,31 @@ import java.time.LocalDateTime;
 @Builder
 public class Payment {
 
-    /** Unique identifier for the payment */
+    /**
+     * Unique identifier for the payment
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Amount paid by the user */
+    /**
+     * Amount paid by the user
+     */
     @NotNull(message = "Amount paid is required")
     @Positive(message = "Amount paid must be greater than 0")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amountPaid;
 
-    /** Status of the payment (SUCCESS or FAIL) */
+    /**
+     * Status of the payment (SUCCESS or FAIL)
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus status;
 
-    /** Date and time the payment was made */
+    /**
+     * Date and time the payment was made
+     */
     @NotNull(message = "Payment date is required")
     @Column(nullable = false)
     private LocalDateTime paymentDate;

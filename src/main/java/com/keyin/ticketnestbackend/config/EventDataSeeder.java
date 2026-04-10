@@ -12,17 +12,34 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * This component seeds Event data into database on application startup.
+ * It checks for existing events to avoid duplicates and adds a
+ * predefined set of events if they do not already exist.
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class EventDataSeeder implements CommandLineRunner {
 
+    /**
+     * A repository for managing Event entities,
+     * used to check for existing events and save new ones.
+     */
     private final EventRepository eventRepository;
 
+    /**
+     * Runs the data seeding process on application startup.
+     * @param args incoming main method arguments
+     */
     @Override
     public void run(String... args) {
         seedEvents();
     }
 
+    /**
+     * Seeds the database with default events if they do not already exist.
+     */
     private void seedEvents() {
         List<Event> defaultEvents = List.of(
                 Event.builder()

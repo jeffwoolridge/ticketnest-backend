@@ -91,6 +91,12 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found."));
     }
 
+    /**
+     * Retrieves payment details by payment ID, including the associated customer's name.
+     * @param id the ID of the payment to retrieve
+     * @return the payment details along with the customer's name
+     * @throws RuntimeException if payment is not found
+     */
     public PaymentResponse getPaymentsById(Long id) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
@@ -103,9 +109,6 @@ public class PaymentService {
      *
      * @return list of all payments
      */
-//    public List<Payment> getAllPayments() {
-//        return paymentRepository.findAll();
-//    }
     public List<PaymentResponse> getAllPayments() {
         return paymentRepository.findAll()
                 .stream()
@@ -147,6 +150,11 @@ public class PaymentService {
         }
     }
 
+    /**
+     * Converts a Payment entity to a PaymentResponse DTO, including the associated customer's name.
+     * @param payment the Payment entity to convert
+     * @return a PaymentResponse containing payment details and the customer's name
+     */
     private PaymentResponse toResponse(Payment payment) {
         return new PaymentResponse(
                 payment.getId(),

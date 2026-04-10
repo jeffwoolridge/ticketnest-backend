@@ -16,15 +16,40 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Controller for handling authentication-related endpoints such as registration and login.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    /**
+     * User repository for accessing user data.
+     */
     private final UserRepository userRepository;
+
+    /**
+     * Password encoder for hashing user passwords.
+     */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Authentication manager for authenticating user credentials during login.
+     */
     private final AuthenticationManager authenticationManager;
+
+    /**
+     * JWT utility for generating and validating JSON Web Tokens for authenticated users.
+     */
     private final JwtUtil jwtUtil;
 
+    /**
+     * Constructs an AuthController with the required dependencies.
+     * @param userRepository repository for user data access
+     * @param passwordEncoder encoder for hashing passwords
+     * @param authenticationManager manager for authenticating user credentials
+     * @param jwtUtil utility for generating and validating JWT tokens
+     */
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
                           AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -33,6 +58,13 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * Endpoint for user registration. Validates the request,
+     * checks for existing email, and creates a new user.
+     *
+     * @param req the registration request containing user details
+     * @return a response entity with the registration result
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
         if (userRepository.existsByEmail(req.email())) {
@@ -49,6 +81,13 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("status","ok","id", saved.getId()));
     }
 
+    /**
+     * Endpoint for user login. Authenticates the user credentials
+     * and returns a JWT token if successful.
+     * @param req the authentication request containing email and password
+     * @return a response entity with the authentication result,
+     *          including a JWT token and user details if successful
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthRequest req) {
         try {

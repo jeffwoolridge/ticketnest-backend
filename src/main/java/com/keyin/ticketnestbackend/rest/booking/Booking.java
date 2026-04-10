@@ -26,28 +26,38 @@ import java.time.LocalDateTime;
 @Builder
 public class Booking {
 
-    /** Unique identifier for the booking */
+    /**
+     * Unique identifier for the booking
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Booking number (human-readable identifier) */
+    /**
+     * Booking number (human-readable identifier)
+     */
     @NotNull(message = "Booking number is required")
     @Column(nullable = false, unique = true)
     private String bookingNumber;
 
-    /** Number of tickets booked */
+    /**
+     * Number of tickets booked
+     */
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be greater than 0")
     @Column(nullable = false)
     private Integer quantity;
 
-    /** Date and time the booking was created */
+    /**
+     * Date and time the booking was created
+     */
     @NotNull(message = "Booking date is required")
     @Column(nullable = false)
     private LocalDateTime bookingDate;
 
-    /** Total price calculated based on quantity and event price */
+    /**
+     * Total price calculated based on quantity and event price
+     */
     @NotNull(message = "Total price is required")
     @Positive(message = "Total price must be greater than 0")
     @Column(nullable = false, precision = 10, scale = 2)

@@ -58,16 +58,23 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    /** Encrypted password */
+    /**
+     * Encrypted password
+     */
     @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
 
-    /** Role assigned to the user (USER or ADMIN) */
+    /**
+     * Role assigned to the user (USER or ADMIN)
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
+    /**
+     * Timestamp of when the user was created, automatically set by Hibernate
+     */
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

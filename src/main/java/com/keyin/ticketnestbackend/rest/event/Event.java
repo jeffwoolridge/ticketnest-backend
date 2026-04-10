@@ -38,49 +38,68 @@ import java.util.List;
 @Builder
 public class Event {
 
-    /** Unique identifier for the event */
+    /**
+     * Unique identifier for the event
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Event title */
+    /**
+     * Event title
+     */
     @Column(nullable = false)
     @NotBlank(message = "Title is required")
     private String title;
 
-    /** Detailed description of the event */
+    /**
+     * Detailed description of the event
+     */
     @NotBlank(message = "Description is required")
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    /** Date of the event */
+    /**
+     * Date of the event
+     */
     @NotNull(message = "Date is required")
     @Column(nullable = false)
     private LocalDate date;
 
-    /** Time of the event */
+    /**
+     * Time of the event
+     */
     @NotNull(message = "Time is required")
     @Column(nullable = false)
     private LocalTime time;
 
-    /** Price per ticket */
+    /**
+     * Price per ticket
+     */
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be greater than 0")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    /** Total number of tickets for the event */
+    /**
+     * Total number of tickets for the event
+     */
     @NotNull(message = "Total tickets is required")
     @Positive(message = "Total tickets must be greater than 0")
     @Column(nullable = false)
     private Integer totalTickets;
 
-    /** Remaining tickets available for booking */
+    /**
+     * Remaining tickets available for booking
+     */
     @NotNull(message = "Available tickets is required")
     @PositiveOrZero(message = "Available tickets cannot be negative")
     @Column(nullable = false)
     private Integer availableTickets;
 
+    /**
+     * Location where the event will take place
+     */
     @NotNull(message = "Location is required")
     @Column(nullable = false)
     private String location;

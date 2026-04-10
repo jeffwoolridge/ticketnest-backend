@@ -29,28 +29,68 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * AuthControllerTest is a test class for the AuthController, which handles user registration and login.
+ * We use @WebMvcTest to focus on testing the web layer, and we mock the dependencies of the
+ * controller such as UserRepository, PasswordEncoder, AuthenticationManager, JwtUtil, and
+ * CustomUserDetailsService. The tests verify that the registration endpoint creates a
+ * user when the email is not taken, and that the login endpoint returns a token and
+ * user information when the credentials are correct.
+ */
 @WebMvcTest(com.keyin.ticketnestbackend.rest.auth.AuthController.class)
 @Import(com.keyin.ticketnestbackend.config.JwtSecurityConfig.class)
 public class AuthControllerTest {
 
+    /**
+     * MockMvc is a Spring MVC testing tool that allows us to perform HTTP requests
+     * and assert the responses without starting a full server. We use it to test the
+     * endpoints of the AuthController by simulating HTTP requests and verifying the results.
+     * It is automatically configured by the @WebMvcTest annotation, and we can inject it
+     * into our test class to use in our test methods.
+     */
     @Autowired
     private MockMvc mockMvc;
 
+    /**
+     * We mock the UserRepository because we want to isolate the tests for the AuthController.
+     */
     @MockBean
     private UserRepository userRepository;
 
+    /**
+     * We mock the PasswordEncoder because we don't want to rely on the actual encoding logic in our tests.
+     */
     @MockBean
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * We mock the AuthenticationManager. By mocking, we can simulate their behavior and focus on testing the controller's logic.
+     */
     @MockBean
     private AuthenticationManager authenticationManager;
 
+    /**
+     * We mock the JwtUtil because we want to control the token generation in our tests and avoid dependencies on the actual implementation.
+     */
     @MockBean
     private JwtUtil jwtUtil;
 
+    /**
+     * We mock the CustomUserDetailsService because it is a dependency of the authentication process,
+     * and we want to isolate our tests from its implementation.
+     * By mocking it, we can simulate its behavior and focus on testing the AuthController's
+     * logic without relying on the actual user details service.
+     */
     @MockBean
     private com.keyin.ticketnestbackend.security.CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Test for the registration endpoint.
+     * We simulate a POST request to /api/auth/register with a JSON payload containing
+     * the user's email, password, first name, and last name.
+     * @throws Exception if the request fails or the assertions do not hold.
+     * We verify that if the email is not taken, the controller creates a new user and returns a successful response with the user's ID.
+     */
     @Test
     @DisplayName("POST /api/auth/register should create user when email not taken")
     void registerCreatesUser() throws Exception {
@@ -75,6 +115,12 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.id").value(2));
     }
 
+    /**
+     * Test for the login endpoint.
+     * We simulate a POST request to /api/auth/login with a JSON payload containing the user's email and password.
+     * We set up the mocks to simulate a successful authentication and token generation.
+     * @throws Exception
+     */
     @Test
     @DisplayName("POST /api/auth/login should return token and user")
     void loginReturnsTokenAndUser() throws Exception {

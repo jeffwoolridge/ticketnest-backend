@@ -16,7 +16,7 @@ ticketnest-backend,com.keyin.ticketnestbackend.rest.payment,PaymentService,44,14
 ticketnest-backend,com.keyin.ticketnestbackend.rest.model,Role,0,15,0,0,0,3,0,1,0,1
 ticketnest-backend,com.keyin.ticketnestbackend.rest.model,PaymentStatus,0,15,0,0,0,3,0,1,0,1
 ticketnest-backend,com.keyin.ticketnestbackend.config,JwtSecurityConfig.new DaoAuthenticationProvider() {...},0,18,0,0,0,4,0,1,0,1
-ticketnest-backend,com.keyin.ticketnestbackend.config,EventDataSeeder,0,118,1,3,0,42,1,3,0,2
+ticketnest-backend,com.keyin.ticketnestbackend.config,EventDataSeeder,6,171,2,6,2,63,2,5,0,3
 ticketnest-backend,com.keyin.ticketnestbackend.config,JwtSecurityConfig,0,193,0,0,0,25,0,8,0,8
 ticketnest-backend,com.keyin.ticketnestbackend.rest.user,UserService,0,82,0,2,0,20,0,8,0,7
 ticketnest-backend,com.keyin.ticketnestbackend.rest.user,UserController,0,41,0,0,0,10,0,6,0,6

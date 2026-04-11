@@ -159,5 +159,11 @@ mvn test
 
 ### Javadoc
 ```
-~/(file-path)/ticketnest-backend/javadoc/index.html
+~/ticketnest-backend/javadoc/index.html
+```
+
+### Admin Login Credentials
+```
+Email: admin@ticketnest.org
+Password: admin123
 ```

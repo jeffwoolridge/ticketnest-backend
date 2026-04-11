@@ -2,9 +2,13 @@ package com.keyin.ticketnestbackend.config;
 
 import com.keyin.ticketnestbackend.rest.event.Event;
 import com.keyin.ticketnestbackend.rest.event.EventRepository;
+import com.keyin.ticketnestbackend.rest.model.Role;
+import com.keyin.ticketnestbackend.rest.user.User;
+import com.keyin.ticketnestbackend.rest.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -29,12 +33,29 @@ public class EventDataSeeder implements CommandLineRunner {
     private final EventRepository eventRepository;
 
     /**
+     * A repository for managing User entities,
+     * used to seed admin user into the database.
+     */
+    private final PasswordEncoder passwordEncoder;
+
+    /**
+     * A repository for managing User entities,
+     * used to seed admin user into the database.
+     */
+    private final UserRepository userRepository;
+
+    /**
      * Runs the data seeding process on application startup.
      * @param args incoming main method arguments
      */
     @Override
     public void run(String... args) {
-        seedEvents();
+        try {
+            seedAdmin();
+            seedEvents();
+        } catch (Exception e) {
+            System.err.println("Error seeding data: " + e.getMessage());
+        }
     }
 
     /**
@@ -85,6 +106,36 @@ public class EventDataSeeder implements CommandLineRunner {
 
             if (!exists) {
                 eventRepository.save(event);
+            }
+        }
+    }
+
+    /**
+     * Seeds the database with admin user
+     */
+    private void seedAdmin() {
+        List<User> adminUser = List.of(
+                User.builder()
+                        .email("admin@ticketnest.org")
+                        .firstName("Admin")
+                        .lastName("TicketNest")
+                        .password(passwordEncoder.encode("admin123"))
+                        .role(Role.ADMIN)
+                        .build()
+
+        );
+
+        for (User user : adminUser) {
+            boolean exists = userRepository.existsByEmailAndFirstNameAndLastNameAndRoleAndPassword(
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole(),
+                    user.getPassword()
+            );
+
+            if (!exists) {
+                userRepository.save(user);
             }
         }
     }
